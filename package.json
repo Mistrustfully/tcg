@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rbxtsc",
-    "watch": "rbxtsc -w"
+    "watch": "rbxtsc -w",
+    "build": "rbxtsc --verbose",
+    "eslint": "eslint src --max-warnings 0"
   },
   "keywords": [],
   "author": "",
