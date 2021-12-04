@@ -1,9 +1,11 @@
 import { SingleMotor, Spring } from "@rbxts/flipper";
 import Maid from "@rbxts/maid";
 import Roact, { Binding } from "@rbxts/roact";
+import { Cards, CardInterface } from "shared/cards";
 
 interface props {
 	Position: UDim2;
+	Card: CardInterface;
 }
 
 export class Card extends Roact.Component<props> {
@@ -41,6 +43,32 @@ export class Card extends Roact.Component<props> {
 				}}
 				AnchorPoint={new Vector2(0.5, 0)}
 			>
+				<textlabel
+					Size={new UDim2(1, 0, 0.1, 0)}
+					Text={this.props.Card.name}
+					BorderSizePixel={0}
+					BackgroundTransparency={1}
+				>
+					<textlabel
+						Position={new UDim2(1, 0, 0, 0)}
+						AnchorPoint={new Vector2(1, 0)}
+						Size={new UDim2(1, 0, 1, 0)}
+						Text={tostring(this.props.Card.mana)}
+						BorderSizePixel={0}
+						BackgroundTransparency={1}
+					>
+						<uiaspectratioconstraint AspectRatio={1} />
+					</textlabel>
+				</textlabel>
+				<textlabel
+					Size={new UDim2(1, 0, 0.25, 0)}
+					Text={this.props.Card.description}
+					BorderSizePixel={0}
+					BackgroundTransparency={1}
+					AnchorPoint={new Vector2(0, 1)}
+					Position={new UDim2(0, 0, 1, 0)}
+					TextWrapped={true}
+				/>
 				<uicorner />
 			</frame>
 		);

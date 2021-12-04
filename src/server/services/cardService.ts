@@ -1,6 +1,6 @@
 import { OnStart, Service } from "@flamework/core";
 import { Players } from "@rbxts/services";
-import cards from "shared/cards.json";
+import { Cards } from "shared/cards";
 
 // Knuth-Fisher-Yates shuffle
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -24,7 +24,7 @@ function shuffle(array: unknown[]) {
 @Service()
 export class cardService implements OnStart {
 	createDeck(player: Player) {
-		const deck = [cards.Sunrise, cards.Sunset];
+		const deck = [Cards.Sunrise, Cards.Sunset];
 		shuffle(deck);
 		print(player, deck);
 	}

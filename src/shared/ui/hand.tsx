@@ -1,6 +1,6 @@
 import Roact from "@rbxts/roact";
 import { Card } from "./card";
-
+import { Cards, CardInterface } from "shared/cards";
 export class Hand extends Roact.Component {
 	render() {
 		return (
@@ -16,9 +16,9 @@ export class Hand extends Roact.Component {
 					FillDirection={Enum.FillDirection.Horizontal}
 					Padding={new UDim(0.05, 0)}
 				/> */}
-				<Card Position={new UDim2(0.5, 0, 0.5, 0)} />
-				<Card Position={new UDim2(0.5 + 0.05, -300, 0.5, 0)} />
-				<Card Position={new UDim2(0.5 - 0.05, 300, 0.5, 0)} />
+				<Card Position={new UDim2(0.5, 0, 0.5, 0)} Card={Cards.None} />
+				<Card Position={new UDim2(0.5 + 0.05, -300, 0.5, 0)} Card={Cards.Sunset} />
+				<Card Position={new UDim2(0.5 - 0.05, 300, 0.5, 0)} Card={Cards.Sunrise} />
 			</frame>
 		);
 	}
