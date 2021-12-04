@@ -1,0 +1,48 @@
+name: "CI"
+on:
+  pull_request:
+  push:
+
+jobs:
+    lint:
+        name: ESLint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2.3.4
+            - name: Install NPM dependencies
+              uses: bahmutov/npm-install@v1.7.4
+            - name: Run ESLint
+              run: npm run eslint
+    build:
+        name: Compile
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2.3.4
+            - name: Install NPM dependencies
+              uses: bahmutov/npm-install@v1.7.4
+            - name: Compile
+              run: npm run build
+    publish:
+        name: Publish
+        runs-on: ubuntu-latest
+        needs: [lint, build]
+        if: github.ref == 'refs/heads/testing'
+        environment: Roblox
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2.3.4
+            - name: Install NPM dependencies
+              uses: bahmutov/npm-install@v1.7.4
+            - name: Compile
+              run: npm run build
+            - name: Install Foreman
+              uses: Roblox/setup-foreman@v1
+              with:
+                token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Build place
+              run: rojo build -o PLACE.rbxl
+            - name: Publish place
+              run: | 
+                    curl  --verbose --location --request POST 'https://apis.roblox.com/universes/v1/3139551611/places/8169822582/versions?versionType=Published' --header 'x-api-key:${{ secrets.PLACE_TOKEN }}' --header 'Content-Type: application/octet-stream' --data-binary @PLACE.rbxl
