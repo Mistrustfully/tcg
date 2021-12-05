@@ -43,7 +43,6 @@
 			},
 			"Map": {
 				"$path": "out/Map.rbxm"
-
 			}
 		},
 		"HttpService": {

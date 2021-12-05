@@ -1,4 +1,4 @@
-import { SingleMotor, Spring } from "@rbxts/flipper";
+import { GroupMotor, Instant, SingleMotor, Spring } from "@rbxts/flipper";
 import Roact, { Binding } from "@rbxts/roact";
 import { Cards, CardInterface } from "shared/cards";
 import Snapdragon from "@rbxts/snapdragon";
@@ -13,11 +13,8 @@ interface state {
 }
 
 export class Card extends Roact.Component<props, state> {
-	private Motor = new SingleMotor(0);
-	private Binding: Binding<number>;
-
-	private LerpMotor = new SingleMotor(1);
-	private LerpBinding: Binding<number>;
+	private Motor = new GroupMotor([0, 0]);
+	private Binding: Binding<number[]>;
 
 	private CardRef = Roact.createRef<ImageLabel>();
 
@@ -27,10 +24,6 @@ export class Card extends Roact.Component<props, state> {
 		const [binding, setBinding] = Roact.createBinding(this.Motor.getValue());
 		this.Binding = binding;
 		this.Motor.onStep(setBinding);
-
-		const [lerpBinding, lerpSetBinding] = Roact.createBinding(this.LerpMotor.getValue());
-		this.LerpBinding = lerpBinding;
-		this.LerpMotor.onStep(lerpSetBinding);
 
 		this.setState(() => {
 			return {
@@ -52,7 +45,7 @@ export class Card extends Roact.Component<props, state> {
 				};
 			});
 			print("Drag began");
-			this.LerpMotor.setGoal(new Spring(0));
+			this.Motor.setGoal([new Spring(0), new Spring(0)]);
 		});
 		Controller.DragEnded.Connect(() => {
 			print("Drag ended");
@@ -61,8 +54,7 @@ export class Card extends Roact.Component<props, state> {
 					Dragging: false,
 				};
 			});
-			this.LerpMotor.setGoal(new Spring(1));
-			this.Motor.setGoal(new Spring(0));
+			this.Motor.setGoal([new Spring(0), new Spring(1)]);
 		});
 	}
 
@@ -72,8 +64,10 @@ export class Card extends Roact.Component<props, state> {
 				Ref={this.CardRef}
 				Image={this.props.Card.artwork === undefined ? "0" : this.props.Card.artwork}
 				ScaleType={Enum.ScaleType.Crop}
-				Size={new UDim2(0, 200, 0, 250)}
-				Position={this.Binding.map((val: number) => {
+				Size={this.Binding.map((vals: number[]) => {
+					return new UDim2(0, 150, 0, 225);
+				})}
+				Position={this.Binding.map((vals: number[]) => {
 					return this.state.Dragging
 						? this.CardRef.getValue()!.Position
 						: (this.CardRef.getValue()?.Position || this.props.Position).Lerp(
@@ -81,17 +75,17 @@ export class Card extends Roact.Component<props, state> {
 									this.props.Position.X.Scale,
 									this.props.Position.X.Offset,
 									this.props.Position.Y.Scale,
-									this.props.Position.Y.Offset - val,
+									this.props.Position.Y.Offset - vals[0],
 								),
-								this.LerpMotor.getValue(),
+								vals[1],
 						  );
 				})}
 				Event={{
 					MouseEnter: () => {
-						this.Motor.setGoal(new Spring(200));
+						this.Motor.setGoal([new Spring(200), new Instant(this.Motor.getValue()[1])]);
 					},
 					MouseLeave: () => {
-						this.Motor.setGoal(new Spring(0));
+						this.Motor.setGoal([new Spring(0), new Instant(this.Motor.getValue()[1])]);
 					},
 				}}
 				AnchorPoint={new Vector2(0.5, 0)}
