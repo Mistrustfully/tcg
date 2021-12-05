@@ -40,6 +40,10 @@
 			"$className": "Workspace",
 			"$properties": {
 				"FilteringEnabled": true
+			},
+			"Map": {
+				"$path": "out/Map.rbxm"
+
 			}
 		},
 		"HttpService": {
