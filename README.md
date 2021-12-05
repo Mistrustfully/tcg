@@ -3,7 +3,7 @@ A Trading Card Game written in Typescript.
 The source code is licensed under the GPLv3 License.
 That means your allowed to modify and rerelease the game, *but*, it must be open sourced, and under the GPLv3 License.
 
-Contributors are welcome.
+Contributors are welcome (read [`CONTRIBUTING.md`](https://github.com/Mistrustfully/tcg/blob/master/CONTRIBUTING.md)).
 
 ```
 Copyright (C) <2021> <Christian Fletcher>
