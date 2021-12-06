@@ -13,7 +13,7 @@ interface ChangeSettingsAction extends Rodux.Action<"ChangeSettingsAction"> {
 	newSettings: ISettings;
 }
 
-function ChangeSettings(newSettings: ChangeSettingsAction["newSettings"]): ChangeSettingsAction {
+export function ChangeSettings(newSettings: ChangeSettingsAction["newSettings"]): ChangeSettingsAction {
 	return {
 		type: "ChangeSettingsAction",
 		newSettings: newSettings,

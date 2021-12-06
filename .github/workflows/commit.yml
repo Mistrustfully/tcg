@@ -51,9 +51,11 @@ jobs:
           - name: install foreman packages (rojo, run-in-roblox)
             run: foreman install
           - name: run rojo build
-            run: rojo build -o .\\unit_tests.rbxlx
-          - name: run tests
-            run: run-in-roblox --place .\\unit_tests.rbxlx --script .\\spec.server.lua
+            run: rojo build -o .\\unit_tests.rbxl
+          - name: run server tests
+            run: run-in-roblox --place .\\unit_tests.rbxl --script .\\spec.server.lua
+          - name: run client tests
+            run: run-in-roblox --place .\\unit_tests.rbxl --script .\\spec.client.lua
         
 
     publish:

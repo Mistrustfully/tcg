@@ -1,10 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerScriptService = game:GetService("ServerScriptService")
 
 local TestEZ = require(ReplicatedStorage.rbxts_include.node_modules.testez.src)
 
 local testRoots = {
-	ServerScriptService.TS, ReplicatedStorage.TS
+	StarterPlayer.StarterPlayerScripts.TS, ReplicatedStorage.TS
+
 }
 local results = TestEZ.TestBootstrap:run(testRoots, TestEZ.Reporters.TextReporter)
 
