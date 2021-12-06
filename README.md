@@ -1,3 +1,4 @@
+[![CI](https://github.com/Mistrustfully/tcg/actions/workflows/commit.yml/badge.svg)](https://github.com/Mistrustfully/tcg/actions/workflows/commit.yml)
 A Trading Card Game written in Typescript.
 
 The source code is licensed under the GPLv3 License.
