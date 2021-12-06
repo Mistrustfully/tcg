@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TestEZ = require(ReplicatedStorage.rbxts_include.node_modules.testez.src)
 
 local testRoots = {
-	ReplicatedStorage.out,
+	ReplicatedStorage.TS,
 }
 local results = TestEZ.TestBootstrap:run(testRoots, TestEZ.Reporters.TextReporter)
 
