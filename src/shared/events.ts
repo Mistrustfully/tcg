@@ -1,12 +1,15 @@
 import { Networking } from "@flamework/networking";
+import { IBoard, StoreActions } from "./rodux/board-state";
 
-interface ServerEvents {
-	playSolo(): void; // Request to play a game against an AI
+interface ServerEvents {}
+
+interface ClientEvents {
+	boardStateChange(Action: StoreActions): void;
 }
 
-interface ClientEvents {}
-
-interface ServerFunctions {}
+interface ServerFunctions {
+	playSolo(): IBoard;
+}
 
 interface ClientFunctions {}
 

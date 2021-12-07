@@ -16,11 +16,9 @@ export class Hand extends Roact.Component {
 					FillDirection={Enum.FillDirection.Horizontal}
 					Padding={new UDim(0.05, 0)}
 				/> */}
-				{
-					// <Card Position={new UDim2(0.5, 0, 0.5, 0)} Card={Cards.None} />
-				}
-				<Card Position={new UDim2(0.5 + 0.025, -150, 0.9, 0)} Card={Cards.Sunset} />
-				<Card Position={new UDim2(0.5 - 0.025, 150, 0.9, 0)} Card={Cards.Sunrise} />
+				<Card Position={new UDim2(0.5, 0, 0.9, 0)} Card={Cards.BoilingRain} />
+				<Card Position={new UDim2(0.5 + 0.15, 0, 0.9, 0)} Card={Cards.Sunset} />
+				<Card Position={new UDim2(0.5 - 0.15, 0, 0.9, 0)} Card={Cards.Sunrise} />
 			</frame>
 		);
 	}

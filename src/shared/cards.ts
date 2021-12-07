@@ -25,4 +25,11 @@ export const Cards = {
 		mana: 4,
 		artwork: "http://www.roblox.com/asset/?id=8181615014",
 	},
+
+	BoilingRain: {
+		name: "Boiling Rain",
+		description: "Reduce power of all non-water cards by 1000",
+		mana: 2,
+		artwork: "http://www.roblox.com/asset/?id=8195338491",
+	},
 };

@@ -1,9 +1,11 @@
+import { Middleware } from "@flamework/networking/out/middleware/types";
 import Llama from "@rbxts/llama";
-import Rodux from "@rbxts/rodux";
+import Rodux, { Store } from "@rbxts/rodux";
 import { CardInterface } from "shared/cards";
+import { GlobalEvents, GlobalFunctions } from "shared/events";
 import { shuffle } from "shared/util/shuffle";
 
-interface IBoard {
+export interface IBoard {
 	PlayerOne: {
 		Field: CardInterface[];
 
@@ -47,7 +49,7 @@ interface DrawCardAction extends Rodux.Action {
 	Card: 0;
 }
 
-type StoreActions = PlayCardAction | DrawCardAction;
+export type StoreActions = PlayCardAction | DrawCardAction;
 
 export function PlayCard(Player: PlayCardAction["Player"], Card: PlayCardAction["Card"]): StoreActions {
 	return {
@@ -90,6 +92,26 @@ const BoardReducer = Rodux.createReducer<IBoard, StoreActions>(InitialState, {
 	},
 });
 
-export function CreateBoardStore(initalstate?: IBoard) {
-	return new Rodux.Store<IBoard, StoreActions, {}>(BoardReducer, initalstate, [Rodux.loggerMiddleware]);
+export type BoardStoreType = Rodux.Store<IBoard, StoreActions>;
+
+export function CreateBoardStore(
+	initalstate?: IBoard,
+	netSettings?: {
+		Player: Player;
+	},
+) {
+	const BoardMiddleware = [Rodux.loggerMiddleware];
+
+	if (netSettings !== undefined) {
+		function NetMiddleware(nextDispatch: Rodux.Dispatch, store: Rodux.Store<IBoard, StoreActions>) {
+			return (action: Rodux.AnyAction) => {
+				GlobalEvents.server.boardStateChange.fire(netSettings!.Player, action as unknown as StoreActions);
+				nextDispatch(action);
+			};
+		}
+
+		BoardMiddleware.push(NetMiddleware);
+	}
+
+	return new Rodux.Store<IBoard, StoreActions, {}>(BoardReducer, initalstate, BoardMiddleware as never);
 }
