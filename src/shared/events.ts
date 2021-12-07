@@ -1,6 +1,8 @@
 import { Networking } from "@flamework/networking";
 
-interface ServerEvents {}
+interface ServerEvents {
+	playSolo(): void; // Request to play a game against an AI
+}
 
 interface ClientEvents {}
 

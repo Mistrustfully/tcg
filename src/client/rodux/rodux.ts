@@ -1,8 +1,4 @@
-import { Controller, OnStart } from "@flamework/core";
-import Llama from "@rbxts/llama";
 import Rodux from "@rbxts/rodux";
-
-// Rodux Store Stuff
 
 interface ISettings {
 	TradeRequests?: boolean;
@@ -34,17 +30,6 @@ const ChangeSettingsReducer = Rodux.createReducer<ISettings, ChangeSettingsActio
 	},
 );
 
-@Controller()
-export class settingsController implements OnStart {
-	public SettingsStore = new Rodux.Store<ISettings, StoreActions, {}>(ChangeSettingsReducer, undefined, [
-		Rodux.loggerMiddleware,
-	]);
-
-	onStart() {
-		this.SettingsStore.dispatch(
-			ChangeSettings({
-				TradeRequests: true,
-			}),
-		);
-	}
-}
+export const SettingsStore = new Rodux.Store<ISettings, StoreActions, {}>(ChangeSettingsReducer, undefined, [
+	Rodux.loggerMiddleware,
+]);
