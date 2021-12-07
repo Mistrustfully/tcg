@@ -95,6 +95,6 @@ const BoardReducer = Rodux.createReducer<IBoard, StoreActions>(InitialState, {
 export type BoardStoreType = Rodux.Store<IBoard, StoreActions>;
 
 export function CreateBoardStore(initalstate?: IBoard, customMiddleware?: Middleware[]) {
-	customMiddleware?.push(Rodux.loggerMiddleware as never);
+	//customMiddleware?.push(Rodux.loggerMiddleware as never);
 	return new Rodux.Store<IBoard, StoreActions, {}>(BoardReducer, initalstate, customMiddleware as never);
 }
