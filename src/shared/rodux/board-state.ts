@@ -94,24 +94,7 @@ const BoardReducer = Rodux.createReducer<IBoard, StoreActions>(InitialState, {
 
 export type BoardStoreType = Rodux.Store<IBoard, StoreActions>;
 
-export function CreateBoardStore(
-	initalstate?: IBoard,
-	netSettings?: {
-		Player: Player;
-	},
-) {
-	const BoardMiddleware = [Rodux.loggerMiddleware];
-
-	if (netSettings !== undefined) {
-		function NetMiddleware(nextDispatch: Rodux.Dispatch, store: Rodux.Store<IBoard, StoreActions>) {
-			return (action: Rodux.AnyAction) => {
-				GlobalEvents.server.boardStateChange.fire(netSettings!.Player, action as unknown as StoreActions);
-				nextDispatch(action);
-			};
-		}
-
-		BoardMiddleware.push(NetMiddleware);
-	}
-
-	return new Rodux.Store<IBoard, StoreActions, {}>(BoardReducer, initalstate, BoardMiddleware as never);
+export function CreateBoardStore(initalstate?: IBoard, customMiddleware?: Middleware[]) {
+	customMiddleware?.push(Rodux.loggerMiddleware as never);
+	return new Rodux.Store<IBoard, StoreActions, {}>(BoardReducer, initalstate, customMiddleware as never);
 }
