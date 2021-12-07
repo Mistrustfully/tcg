@@ -1,5 +1,6 @@
 /// <reference types="@rbxts/testez/globals" />
 
+import Llama from "@rbxts/llama";
 import { Cards } from "shared/cards";
 import { CreateBoardStore, PlayCard } from "./board-state";
 
@@ -23,7 +24,8 @@ export = () => {
 			});
 
 			BoardStore.dispatch(PlayCard("PlayerOne", 0));
-			expect(BoardStore.getState().PlayerOne.Field).to.equal([Cards.Sunrise]);
+
+			expect(Llama.List.equals(BoardStore.getState().PlayerOne.Field, [Cards.Sunrise])).to.be.ok();
 		});
 	});
 };
