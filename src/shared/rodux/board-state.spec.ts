@@ -2,7 +2,7 @@
 
 import Llama from "@rbxts/llama";
 import { Cards } from "shared/cards";
-import { CreateBoardStore, PlayCard } from "./board-state";
+import { CreateBoardStore, DrawCard, PlayCard } from "./board-state";
 
 export = () => {
 	describe("Board State", () => {
@@ -26,6 +26,50 @@ export = () => {
 			BoardStore.dispatch(PlayCard("PlayerOne", 0));
 
 			expect(Llama.List.equals(BoardStore.getState().PlayerOne.Field, [Cards.Sunrise])).to.be.ok();
+		});
+
+		it("should draw a card", () => {
+			const BoardStore = CreateBoardStore({
+				PlayerOne: {
+					Hand: [],
+					Field: [],
+					Deck: [Cards.Sunrise],
+					DiscardPile: [],
+				},
+
+				PlayerTwo: {
+					Hand: [Cards.Sunset],
+					Field: [],
+					Deck: [],
+					DiscardPile: [],
+				},
+			});
+
+			BoardStore.dispatch(DrawCard("PlayerOne"));
+
+			expect(Llama.List.equals(BoardStore.getState().PlayerOne.Hand, [Cards.Sunrise])).to.be.ok();
+		});
+
+		it("should shuffle the discard pile into the deck, and draw", () => {
+			const BoardStore = CreateBoardStore({
+				PlayerOne: {
+					Hand: [],
+					Field: [],
+					Deck: [],
+					DiscardPile: [Cards.Sunrise],
+				},
+
+				PlayerTwo: {
+					Hand: [Cards.Sunset],
+					Field: [],
+					Deck: [],
+					DiscardPile: [],
+				},
+			});
+
+			BoardStore.dispatch(DrawCard("PlayerOne"));
+
+			expect(Llama.List.equals(BoardStore.getState().PlayerOne.Hand, [Cards.Sunrise])).to.be.ok();
 		});
 	});
 };
