@@ -87,19 +87,19 @@ export const Card = RoactRodux.connect(
 					Image={this.props.Card.artwork === undefined ? "0" : this.props.Card.artwork}
 					ScaleType={Enum.ScaleType.Crop}
 					Size={this.Binding.map((vals: number) => {
-						return new UDim2(0, 150, 0, 225);
+						return new UDim2(0.124, 0, 0.321, 0);
 					})}
 					Position={this.Binding.map((vals: number) => {
 						return new UDim2(
 							this.props.position.X.Scale,
 							this.props.position.X.Offset,
-							this.props.position.Y.Scale,
-							this.props.position.Y.Offset - vals,
+							this.props.position.Y.Scale - vals,
+							this.props.position.Y.Offset,
 						);
 					})}
 					Event={{
 						MouseEnter: () => {
-							this.Motor.setGoal(new Spring(200));
+							this.Motor.setGoal(new Spring(0.25));
 						},
 						MouseLeave: () => {
 							this.Motor.setGoal(new Spring(0));
@@ -134,6 +134,7 @@ export const Card = RoactRodux.connect(
 						TextWrapped={true}
 					/>
 					<uicorner />
+					<uiaspectratioconstraint AspectRatio={0.666} DominantAxis={Enum.DominantAxis.Width} />
 				</imagelabel>
 			);
 		}
