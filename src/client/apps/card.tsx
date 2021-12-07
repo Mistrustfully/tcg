@@ -57,6 +57,7 @@ export const Card = RoactRodux.connect(
 			const Controller = Snapdragon.createDragController(this.CardRef.getValue()!, {
 				DragThreshold: 5,
 			});
+			/*
 			Controller.Connect();
 
 			Controller.DragBegan.Connect(() => {
@@ -67,7 +68,8 @@ export const Card = RoactRodux.connect(
 				});
 				print("Drag began");
 				this.Motor.setGoal(new Spring(0));
-			});
+			})};
+			
 			Controller.DragEnded.Connect(() => {
 				print("Drag ended");
 				this.setState(() => {
@@ -77,6 +79,7 @@ export const Card = RoactRodux.connect(
 				});
 				this.Motor.setGoal(new Spring(0));
 			});
+			*/
 		}
 
 		render() {
