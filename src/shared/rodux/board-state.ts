@@ -44,7 +44,10 @@ interface PlayCardAction extends Rodux.Action {
 
 interface DrawCardAction extends Rodux.Action {
 	Player: "PlayerOne" | "PlayerTwo";
+	Card: 0;
 }
+
+type StoreActions = PlayCardAction | DrawCardAction;
 
 export function PlayCard(Player: PlayCardAction["Player"], Card: PlayCardAction["Card"]): StoreActions {
 	return {
@@ -61,8 +64,6 @@ export function DrawCard(Player: DrawCardAction["Player"]): StoreActions {
 		Player: Player,
 	};
 }
-
-type StoreActions = PlayCardAction & DrawCardAction;
 
 const BoardReducer = Rodux.createReducer<IBoard, StoreActions>(InitialState, {
 	PlayCardAction: (state, action) => {
