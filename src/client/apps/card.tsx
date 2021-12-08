@@ -34,8 +34,10 @@ export const Card = RoactRodux.connect(
 		ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & props,
 		state
 	> {
-		private Motor = new SingleMotor(0);
-		private Binding: Binding<number>;
+		private Motor = new GroupMotor([0, 0]);
+		private MotorGoals = [0, 0];
+
+		private Binding: Binding<number[]>;
 
 		private CardRef = Roact.createRef<ImageLabel>();
 
@@ -57,29 +59,34 @@ export const Card = RoactRodux.connect(
 			const Controller = Snapdragon.createDragController(this.CardRef.getValue()!, {
 				DragThreshold: 5,
 			});
-			/*
 			Controller.Connect();
 
 			Controller.DragBegan.Connect(() => {
+				this.Motor.setGoal([new Spring(this.MotorGoals[0]), new Spring(1)]);
+				this.MotorGoals[1] = 1;
+
 				this.setState(() => {
 					return {
 						Dragging: true,
 					};
 				});
-				print("Drag began");
-				this.Motor.setGoal(new Spring(0));
-			})};
-			
+			});
+
 			Controller.DragEnded.Connect(() => {
-				print("Drag ended");
+				this.Motor.setGoal([new Instant(0), new Spring(0, { frequency: 1.5 })]);
+				this.MotorGoals[1] = 0;
+				this.MotorGoals[0] = 0;
+
 				this.setState(() => {
 					return {
 						Dragging: false,
 					};
 				});
-				this.Motor.setGoal(new Spring(0));
 			});
-			*/
+
+			Controller.DragChanged.Connect(() => {
+				this.Motor.step(0);
+			});
 		}
 
 		render() {
@@ -89,23 +96,36 @@ export const Card = RoactRodux.connect(
 					Ref={this.CardRef}
 					Image={this.props.Card.artwork === undefined ? "0" : this.props.Card.artwork}
 					ScaleType={Enum.ScaleType.Crop}
-					Size={this.Binding.map((vals: number) => {
-						return new UDim2(0.124, 0, 0.321, 0);
-					})}
-					Position={this.Binding.map((vals: number) => {
-						return new UDim2(
-							this.props.position.X.Scale,
-							this.props.position.X.Offset,
-							this.props.position.Y.Scale - vals,
-							this.props.position.Y.Offset,
+					Size={new UDim2(0.124, 0, 0.321, 0)}
+					Position={this.Binding.map((vals: number[]) => {
+						const RealDragging = this.state.Dragging || vals[1] > 0.05;
+
+						if (this.state.Dragging) {
+							return this.CardRef.getValue()!.Position;
+						}
+
+						return (this.CardRef.getValue()?.Position || this.props.position).Lerp(
+							new UDim2(
+								this.props.position.X.Scale,
+								this.props.position.X.Offset,
+								this.props.position.Y.Scale - (RealDragging ? 0 : vals[0]),
+								this.props.position.Y.Offset,
+							),
+							1 - vals[1],
 						);
 					})}
 					Event={{
 						MouseEnter: () => {
-							this.Motor.setGoal(new Spring(0.25));
+							if (!this.state.Dragging) {
+								this.Motor.setGoal([new Spring(0.25)]);
+								this.MotorGoals[0] = 0.25;
+							}
 						},
 						MouseLeave: () => {
-							this.Motor.setGoal(new Spring(0));
+							if (!this.state.Dragging) {
+								this.Motor.setGoal([new Spring(0)]);
+								this.MotorGoals[0] = 0;
+							}
 						},
 					}}
 					AnchorPoint={new Vector2(0.5, 0)}
