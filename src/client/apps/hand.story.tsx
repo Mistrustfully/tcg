@@ -10,7 +10,7 @@ export = (instance: Instance) => {
 			store={CreateBoardStore({
 				PlayerOne: {
 					Field: new Map<number, CardInterface>(),
-					Hand: [Cards.BoilingRain, Cards.Sunrise, Cards.Sunset],
+					Hand: [Cards.BoilingRain, Cards.Sunrise, Cards.Sunset, Cards.EmperorOfNight, Cards.StarryRift],
 					Deck: [],
 					DiscardPile: [],
 				},

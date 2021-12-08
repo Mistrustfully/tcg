@@ -32,4 +32,18 @@ export const Cards = {
 		mana: 2,
 		artwork: "http://www.roblox.com/asset/?id=8195338491",
 	},
+
+	StarryRift: {
+		name: "Starry Rift",
+		description: "Both players draw any card they want from their deck",
+		mana: 6,
+		artwork: "https://www.roblox.com/asset/?id=8202067854",
+	},
+
+	EmperorOfNight: {
+		name: "Emperor of Night",
+		description: "5000 Power",
+		mana: 5,
+		artwork: "https://www.roblox.com/asset/?id=8202067528",
+	},
 };
