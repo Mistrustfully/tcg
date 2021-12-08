@@ -18,7 +18,7 @@ interface state {
 const mapStateToProps = (State: IBoard, Props: props) => {
 	print(Props.CardNumber - (State.PlayerOne.Hand.size() - 1) / 2);
 	return {
-		position: new UDim2(0.5 - (Props.CardNumber - (State.PlayerOne.Hand.size() - 1) / 2) / 7, 0, 0.9, 0),
+		position: new UDim2(0.5 - (Props.CardNumber - (State.PlayerOne.Hand.size() - 1) / 2) / 9, 0, 0.95, 0),
 	};
 };
 
@@ -39,7 +39,7 @@ export const Card = RoactRodux.connect(
 
 		private Binding: Binding<number[]>;
 
-		private CardRef = Roact.createRef<ImageLabel>();
+		private CardRef = Roact.createRef<Frame>();
 
 		constructor(props: ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & props) {
 			super(props);
@@ -58,6 +58,7 @@ export const Card = RoactRodux.connect(
 		didMount() {
 			const Controller = Snapdragon.createDragController(this.CardRef.getValue()!, {
 				DragThreshold: 5,
+				DragGridSize: 2,
 			});
 			Controller.Connect();
 
@@ -92,11 +93,11 @@ export const Card = RoactRodux.connect(
 		render() {
 			this.Motor.step(0);
 			return (
-				<imagelabel
+				<frame
 					Ref={this.CardRef}
-					Image={this.props.Card.artwork === undefined ? "0" : this.props.Card.artwork}
-					ScaleType={Enum.ScaleType.Crop}
-					Size={new UDim2(0.124, 0, 0.321, 0)}
+					AnchorPoint={new Vector2(0.5, 0)}
+					BackgroundTransparency={1}
+					Size={new UDim2(0.093, 0, 0.24075, 0)}
 					Position={this.Binding.map((vals: number[]) => {
 						const RealDragging = this.state.Dragging || vals[1] > 0.05;
 
@@ -117,8 +118,8 @@ export const Card = RoactRodux.connect(
 					Event={{
 						MouseEnter: () => {
 							if (!this.state.Dragging) {
-								this.Motor.setGoal([new Spring(0.25)]);
-								this.MotorGoals[0] = 0.25;
+								this.Motor.setGoal([new Spring(0.2)]);
+								this.MotorGoals[0] = 0.2;
 							}
 						},
 						MouseLeave: () => {
@@ -128,37 +129,46 @@ export const Card = RoactRodux.connect(
 							}
 						},
 					}}
-					AnchorPoint={new Vector2(0.5, 0)}
 				>
-					<textlabel
-						Size={new UDim2(1, 0, 0.1, 0)}
-						Text={this.props.Card.name}
-						BorderSizePixel={0}
-						BackgroundTransparency={1}
+					<imagelabel
+						Image={this.props.Card.artwork === undefined ? "0" : this.props.Card.artwork}
+						ScaleType={Enum.ScaleType.Crop}
+						Size={this.Binding.map((vals: number[]) => {
+							return UDim2.fromScale(1 + vals[0] * 1.5, 1 + vals[0] * 1.5);
+						})}
+						AnchorPoint={new Vector2(0.5, 1)}
+						Position={UDim2.fromScale(0.5, 1)}
 					>
 						<textlabel
-							Position={new UDim2(1, 0, 0, 0)}
-							AnchorPoint={new Vector2(1, 0)}
-							Size={new UDim2(1, 0, 1, 0)}
-							Text={tostring(this.props.Card.mana)}
+							Size={new UDim2(1, 0, 0.1, 0)}
+							Text={this.props.Card.name}
 							BorderSizePixel={0}
 							BackgroundTransparency={1}
 						>
-							<uiaspectratioconstraint AspectRatio={1} />
+							<textlabel
+								Position={new UDim2(1, 0, 0, 0)}
+								AnchorPoint={new Vector2(1, 0)}
+								Size={new UDim2(1, 0, 1, 0)}
+								Text={tostring(this.props.Card.mana)}
+								BorderSizePixel={0}
+								BackgroundTransparency={1}
+							>
+								<uiaspectratioconstraint AspectRatio={1} />
+							</textlabel>
 						</textlabel>
-					</textlabel>
-					<textlabel
-						Size={new UDim2(1, 0, 0.25, 0)}
-						Text={this.props.Card.description}
-						BorderSizePixel={0}
-						BackgroundTransparency={1}
-						AnchorPoint={new Vector2(0, 1)}
-						Position={new UDim2(0, 0, 1, 0)}
-						TextWrapped={true}
-					/>
-					<uicorner />
-					<uiaspectratioconstraint AspectRatio={0.666} DominantAxis={Enum.DominantAxis.Width} />
-				</imagelabel>
+						<textlabel
+							Size={new UDim2(1, 0, 0.25, 0)}
+							Text={this.props.Card.description}
+							BorderSizePixel={0}
+							BackgroundTransparency={1}
+							AnchorPoint={new Vector2(0, 1)}
+							Position={new UDim2(0, 0, 1, 0)}
+							TextWrapped={true}
+						/>
+						<uicorner />
+						<uiaspectratioconstraint AspectRatio={0.666} DominantAxis={Enum.DominantAxis.Width} />
+					</imagelabel>
+				</frame>
 			);
 		}
 	},
