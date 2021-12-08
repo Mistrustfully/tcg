@@ -1,7 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
 import Rodux from "@rbxts/rodux";
 import { Events, Functions } from "server/events";
-import { Cards } from "shared/cards";
+import { CardInterface, Cards } from "shared/cards";
 import { GlobalEvents } from "shared/events";
 import { CreateBoardStore, DrawCard, IBoard, StoreActions } from "shared/rodux/board-state";
 
@@ -12,14 +12,14 @@ export class GameService implements OnStart {
 		Functions.playSolo.setCallback((player: Player) => {
 			const State: IBoard = {
 				PlayerOne: {
-					Field: [],
+					Field: new Map<number, CardInterface>(),
 					Hand: [],
 					Deck: [Cards.Sunrise, Cards.Sunset, Cards.BoilingRain],
 					DiscardPile: [],
 				},
 
 				PlayerTwo: {
-					Field: [],
+					Field: new Map<number, CardInterface>(),
 					Hand: [],
 					Deck: [Cards.Sunrise, Cards.Sunset, Cards.BoilingRain],
 					DiscardPile: [],

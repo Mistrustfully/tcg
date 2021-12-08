@@ -1,3 +1,4 @@
+import { fireNetworkHandler } from "@flamework/networking/out/handlers";
 import { Middleware } from "@flamework/networking/out/middleware/types";
 import Llama from "@rbxts/llama";
 import Rodux, { Store } from "@rbxts/rodux";
@@ -7,7 +8,10 @@ import { shuffle } from "shared/util/shuffle";
 
 export interface IBoard {
 	PlayerOne: {
-		Field: CardInterface[];
+		// We use a map for the field rather than an array.
+		// This is to avoid arrays with holes in them, as you can play a
+		// card to the fifth slot, without playing to the first.
+		Field: Map<number, CardInterface>;
 
 		Hand: CardInterface[];
 		Deck: CardInterface[];
@@ -15,7 +19,7 @@ export interface IBoard {
 	};
 
 	PlayerTwo: {
-		Field: CardInterface[];
+		Field: Map<number, CardInterface>;
 
 		Hand: CardInterface[];
 		Deck: CardInterface[];
@@ -25,14 +29,14 @@ export interface IBoard {
 
 const InitialState = {
 	PlayerOne: {
-		Field: [],
+		Field: new Map<number, CardInterface>(),
 		Hand: [],
 		Deck: [],
 		DiscardPile: [],
 	},
 
 	PlayerTwo: {
-		Field: [],
+		Field: new Map<number, CardInterface>(),
 		Hand: [],
 		Deck: [],
 		DiscardPile: [],
@@ -42,20 +46,27 @@ const InitialState = {
 interface PlayCardAction extends Rodux.Action {
 	Player: "PlayerOne" | "PlayerTwo";
 	Card: number;
+	CardSlot: number;
 }
 
 interface DrawCardAction extends Rodux.Action {
 	Player: "PlayerOne" | "PlayerTwo";
 	Card: 0;
+	CardSlot: 0;
 }
 
 export type StoreActions = PlayCardAction | DrawCardAction;
 
-export function PlayCard(Player: PlayCardAction["Player"], Card: PlayCardAction["Card"]): StoreActions {
+export function PlayCard(
+	Player: PlayCardAction["Player"],
+	Card: PlayCardAction["Card"],
+	CardSlot: PlayCardAction["CardSlot"],
+): StoreActions {
 	return {
 		type: "PlayCardAction",
 		Player: Player,
 		Card: Card,
+		CardSlot: CardSlot,
 	};
 }
 
@@ -64,6 +75,7 @@ export function DrawCard(Player: DrawCardAction["Player"]): StoreActions {
 		type: "DrawCardAction",
 		Card: 0,
 		Player: Player,
+		CardSlot: 0,
 	};
 }
 
@@ -71,7 +83,7 @@ const BoardReducer = Rodux.createReducer<IBoard, StoreActions>(InitialState, {
 	PlayCardAction: (state, action) => {
 		const newState = Llama.Dictionary.copy(state);
 		const Player = newState[action.Player];
-		Player.Field.push(Player.Hand[action.Card]);
+		Player.Field.set(action.CardSlot, Player.Hand[action.Card]);
 		Player.Hand.remove(action.Card);
 
 		return newState;
